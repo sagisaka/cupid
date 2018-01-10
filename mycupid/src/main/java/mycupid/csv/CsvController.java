@@ -8,8 +8,9 @@ import java.io.IOException;
 import java.io.PrintWriter;
 
 public class CsvController {
-	public void outputCsv(String file_name,String file_output,String birthmark) throws IOException{
+	public void outputCsv(String file_name,String file_output,String birthmark,Integer size,Integer size2) throws IOException{
 		CsvSetup set = new CsvSetup();
+		Judgment judg = new Judgment();
 		File file = new File(file_name);
 		BufferedReader br = set.inputFile(file);
 		String line;
@@ -18,9 +19,13 @@ public class CsvController {
 			String array[] = line.split(",");
 			count += set.search(array,file_output+"_"+birthmark+".csv",birthmark);
 		}
-		FileWriter fw = new FileWriter(file_output+"_count.csv", true); 
+		FileWriter fw = new FileWriter(birthmark+"_count.csv", true); 
 		PrintWriter pw = new PrintWriter(new BufferedWriter(fw));
-		pw.println(birthmark +","+ count);
+		if(size>size2){
+			size=size2;
+		}
+		String rank = judg.rank(count,size);
+		pw.println(file_name +","+birthmark +","+ count +","+rank );
 		br.close();
 		pw.close();
 	}
